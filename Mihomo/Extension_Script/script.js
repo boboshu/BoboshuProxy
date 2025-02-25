@@ -662,14 +662,14 @@ function overwriteRules (params) {
 
     const nonipRules = [
         "RULE-SET,cdn_domainset,🎯 节点选择",
-        // "RULE-SET,cdn_non_ip,🎯 节点选择",
-        "RULE-SET,cdn_non_ip,DIRECT",
+        "RULE-SET,cdn_non_ip,🎯 节点选择",
         "RULE-SET,stream_non_ip,US - 自动选择",
         "RULE-SET,telegram_non_ip,✈️ 电报信息",
         "RULE-SET,apple_cdn,DIRECT",
         // "RULE-SET,download_domainset,🎯 节点选择",
+        // "RULE-SET,download_non_ip,🎯 节点选择",
         "RULE-SET,download_domainset,DIRECT",
-        "RULE-SET,download_non_ip,🎯 节点选择",
+        "RULE-SET,download_non_ip,DIRECT",
         "RULE-SET,microsoft_cdn_non_ip,DIRECT",
         "RULE-SET,apple_cn_non_ip,DIRECT",
         "RULE-SET,apple_services,🍎 苹果服务",
