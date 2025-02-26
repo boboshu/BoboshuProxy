@@ -632,6 +632,15 @@ function overwriteProxyGroups (params) {
             // "include-all": true,
             icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/Microsoft.png"
         },
+        {
+            name: "Final",
+            type: "select",
+            proxies: [
+                "自动选择",
+                "手动选择",
+                "DIRECT",
+            ],
+        },
     ];
 
     autoProxyGroups.length &&
@@ -678,7 +687,8 @@ function overwriteRules (params) {
         "RULE-SET,global_non_ip,🎯 节点选择",
         "RULE-SET,domestic_non_ip,DIRECT",
         "RULE-SET,direct_non_ip,DIRECT",
-        "RULE-SET,lan_non_ip,DIRECT"
+        "RULE-SET,lan_non_ip,DIRECT",
+        "RULE-SET,gfw,🎯 节点选择"
     ];
 
     const allNonipRules = [
@@ -694,7 +704,8 @@ function overwriteRules (params) {
         "RULE-SET,lan_ip,DIRECT",
         "RULE-SET,domestic_ip,DIRECT",
         "RULE-SET,china_ip,DIRECT",
-        "MATCH,🎯 节点选择"
+        "MATCH,Final",
+        // "MATCH,🎯 节点选择",
     ];
 
     const rules = [
@@ -947,6 +958,15 @@ function overwriteRules (params) {
             interval: 43200,
             format: "text",
             proxy: "🎯 节点选择"
+        },
+        gfw: {
+            type: "http",
+            behavior: "domain",
+            url: "https://ghproxy.ecorp.one/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/gfw.txt",
+            path: "./rule_set/Loyalsoldier_ruleset/gfw.txt",
+            interval: 43200,
+            format: "text",
+            proxy: "🎯 节点选择"
         }
     };
     
@@ -963,4 +983,3 @@ function getManualProxiesByRegex (params, regex) {
     const matchedProxies = params.proxies.filter ((e) => regex.test (e.name)).map ((e) => e.name);
     return matchedProxies.length > 0 ? matchedProxies : ["COMPATIBLE"];
 }
-
