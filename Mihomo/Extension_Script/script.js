@@ -1,20 +1,20 @@
 // Mihomo Party 覆写 / Clash Verge Rev 扩展脚本
 
-function main (params) {
+function main(params) {
     if (!params.proxies) return params;
-    overwriteBasicOptions (params);
-    overwriteDns (params);
-    overwriteFakeIpFilter (params);
-    overwriteNameserverPolicy (params);
-    overwriteHosts (params);
-    overwriteTunnel (params);
-    overwriteProxyGroups (params);
-    overwriteRules (params);
+    overwriteBasicOptions(params);
+    overwriteDns(params);
+    overwriteFakeIpFilter(params);
+    overwriteNameserverPolicy(params);
+    overwriteHosts(params);
+    overwriteTunnel(params);
+    overwriteProxyGroups(params);
+    overwriteRules(params);
     return params;
 }
 
 // 覆写Basic Options
-function overwriteBasicOptions (params) {
+function overwriteBasicOptions(params) {
     const otherOptions = {
         "mixed-port": 7897,
         "allow-lan": true,
@@ -46,13 +46,13 @@ function overwriteBasicOptions (params) {
             "skip-domain": ["Mijia Cloud", "+.push.apple.com"]
         },
     };
-    Object.keys (otherOptions).forEach ((key) => {
-        params [key] = otherOptions [key];
+    Object.keys(otherOptions).forEach((key) => {
+        params[key] = otherOptions[key];
     });
 }
 
 // 覆写DNS
-function overwriteDns (params) {
+function overwriteDns(params) {
     const dnsList = [
         "https://223.5.5.5/dns-query",
         "https://doh.pub/dns-query",
@@ -84,27 +84,9 @@ function overwriteFakeIpFilter (params) {
         "+.$local.adguard.org",
         "+.+bogon",
         "+.+lan",
+        "+.+local",
         "+.+localdomain",
         "+.home.arpa",
-        "+.10.in-addr.arpa",
-        "+.16.172.in-addr.arpa",
-        "+.17.172.in-addr.arpa",
-        "+.18.172.in-addr.arpa",
-        "+.19.172.in-addr.arpa",
-        "+.20.172.in-addr.arpa",
-        "+.21.172.in-addr.arpa",
-        "+.22.172.in-addr.arpa",
-        "+.23.172.in-addr.arpa",
-        "+.24.172.in-addr.arpa",
-        "+.25.172.in-addr.arpa",
-        "+.26.172.in-addr.arpa",
-        "+.27.172.in-addr.arpa",
-        "+.28.172.in-addr.arpa",
-        "+.29.172.in-addr.arpa",
-        "+.30.172.in-addr.arpa",
-        "+.31.172.in-addr.arpa",
-        "+.168.192.in-addr.arpa",
-        "+.254.169.in-addr.arpa",
         "dns.msftncsi.com",
         "*.srv.nintendo.net",
         "*.stun.playstation.net",
@@ -113,7 +95,9 @@ function overwriteFakeIpFilter (params) {
         "*.turn.twilio.com",
         "*.stun.twilio.com",
         "stun.syncthing.net",
-        "stun.*"
+        "stun.*",
+        "*.sslip.io",
+        "*.nip.io"
     ];
     params.dns["fake-ip-filter"] = fakeIpFilter;
 }
@@ -283,6 +267,7 @@ function overwriteNameserverPolicy (params) {
         "+.xiaomi.net": "https://doh.pub/dns-query",
         "+.xiaomiev.com": "https://doh.pub/dns-query",
         "+.xiaomiyoupin.com": "https://doh.pub/dns-query",
+        "+.gorouter.info": "https://doh.pub/dns-query",
         "+.bytedance.com": "180.184.2.2",
         "*.bytecdn.cn": "180.184.2.2",
         "*.volccdn.com": "180.184.2.2",
@@ -411,9 +396,6 @@ function overwriteNameserverPolicy (params) {
         "ntt.setup": ['system://', 'system', 'dhcp://system'],
         "pi.hole": ['system://', 'system', 'dhcp://system'],
         "*.plex.direct": ['system://', 'system', 'dhcp://system'],
-        "*.lan": ['system://', 'system', 'dhcp://system'],
-        "*.localdomain": ['system://', 'system', 'dhcp://system'],
-        "+.home.arpa": ['system://', 'system', 'dhcp://system'],
         "+.10.in-addr.arpa": ['system://', 'system', 'dhcp://system'],
         "+.16.172.in-addr.arpa": ['system://', 'system', 'dhcp://system'],
         "+.17.172.in-addr.arpa": ['system://', 'system', 'dhcp://system'],
@@ -432,7 +414,11 @@ function overwriteNameserverPolicy (params) {
         "+.30.172.in-addr.arpa": ['system://', 'system', 'dhcp://system'],
         "+.31.172.in-addr.arpa": ['system://', 'system', 'dhcp://system'],
         "+.168.192.in-addr.arpa": ['system://', 'system', 'dhcp://system'],
-        "+.254.169.in-addr.arpa": ['system://', 'system', 'dhcp://system']
+        "+.254.169.in-addr.arpa": ['system://', 'system', 'dhcp://system'],
+        "*.lan": ['system://', 'system', 'dhcp://system'],
+        "*.local": ['system://', 'system', 'dhcp://system'],
+        "*.localdomain": ['system://', 'system', 'dhcp://system'],
+        "+.home.arpa": ['system://', 'system', 'dhcp://system']
     };
     params.dns["nameserver-policy"] = nameserverPolicy;
 }
@@ -448,7 +434,7 @@ function overwriteHosts (params) {
 }
 
 // 覆写Tunnel
-function overwriteTunnel (params) {
+function overwriteTunnel(params) {
     const tunnelOptions = {
         enable: true,
         stack: "system",
@@ -464,9 +450,9 @@ function overwriteTunnel (params) {
 }
 
 // 覆写代理组
-function overwriteProxyGroups (params) {
+function overwriteProxyGroups(params) {
     // 所有代理
-    const allProxies = params ["proxies"].map ((e) => e.name);
+    const allProxies = params["proxies"].map((e) => e.name);
     // 公共的正则片段
     const excludeTerms = "剩余|到期|主页|官网|游戏|关注|网站|地址|有效|网址|禁止|邮箱|发布|客服|订阅|节点|问题|联系";
     // 包含条件：各个国家或地区的关键词
@@ -494,82 +480,90 @@ function overwriteProxyGroups (params) {
         { name: "UK - 自动选择", regex: new RegExp(`^(?=.*${includeTerms.UK})(?!.*${excludeTerms}).*$`, "i") },
         { name: "FR - 自动选择", regex: new RegExp(`^(?=.*${includeTerms.FR})(?!.*${excludeTerms}).*$`, "i") },
         { name: "DE - 自动选择", regex: new RegExp(`^(?=.*${includeTerms.DE})(?!.*${excludeTerms}).*$`, "i") },
-        { 
-            name: "其它 - 自动选择", 
-            regex: new RegExp(`^(?!.*(?:${allCountryTerms}|${excludeTerms})).*$`, "i") 
+        {
+            name: "其它 - 自动选择",
+            regex: new RegExp(`^(?!.*(?:${allCountryTerms}|${excludeTerms})).*$`, "i")
         }
     ];
-        
+
     const autoProxyGroups = autoProxyGroupRegexs
-        .map ((item) => ({
+        .map((item) => ({
             name: item.name,
             type: "url-test",
             url: "https://cp.cloudflare.com",
             interval: 300,
             tolerance: 50,
-            proxies: getProxiesByRegex (params, item.regex),
+            proxies: getProxiesByRegex(params, item.regex),
             hidden: true,
         }))
-        .filter ((item) => item.proxies.length > 0);
+        .filter((item) => item.proxies.length > 0);
 
     // 手动选择代理组
     const manualProxyGroups = [
-        { 
-            name: "HK - 手动选择", 
-            regex: new RegExp(`^(?=.*${includeTerms.HK})(?!.*${excludeTerms}).*$`, "i"), 
-            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/HK.png" 
+        {
+            name: "HK - 手动选择",
+            regex: new RegExp(`^(?=.*${includeTerms.HK})(?!.*${excludeTerms}).*$`, "i"),
+            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/HK.png"
         },
-        { 
-            name: "JP - 手动选择", 
-            regex: new RegExp(`^(?=.*${includeTerms.JP})(?!.*${excludeTerms}).*$`, "i"), 
-            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/JP.png" 
+        {
+            name: "JP - 手动选择",
+            regex: new RegExp(`^(?=.*${includeTerms.JP})(?!.*${excludeTerms}).*$`, "i"),
+            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/JP.png"
         },
-        { 
-            name: "KR - 手动选择", 
-            regex: new RegExp(`^(?=.*${includeTerms.KR})(?!.*${excludeTerms}).*$`, "i"), 
-            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/KR.png" 
+        {
+            name: "KR - 手动选择",
+            regex: new RegExp(`^(?=.*${includeTerms.KR})(?!.*${excludeTerms}).*$`, "i"),
+            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/KR.png"
         },
-        { 
-            name: "SG - 手动选择", 
-            regex: new RegExp(`^(?=.*${includeTerms.SG})(?!.*${excludeTerms}).*$`, "i"), 
-            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/SG.png" 
+        {
+            name: "SG - 手动选择",
+            regex: new RegExp(`^(?=.*${includeTerms.SG})(?!.*${excludeTerms}).*$`, "i"),
+            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/SG.png"
         },
-        { 
-            name: "US - 手动选择", 
-            regex: new RegExp(`^(?=.*${includeTerms.US})(?!.*${excludeTerms}).*$`, "i"), 
-            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/US.png" 
+        {
+            name: "US - 手动选择",
+            regex: new RegExp(`^(?=.*${includeTerms.US})(?!.*${excludeTerms}).*$`, "i"),
+            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/US.png"
         },
-        { 
-            name: "UK - 手动选择", 
-            regex: new RegExp(`^(?=.*${includeTerms.UK})(?!.*${excludeTerms}).*$`, "i"), 
-            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/UK.png" 
+        {
+            name: "UK - 手动选择",
+            regex: new RegExp(`^(?=.*${includeTerms.UK})(?!.*${excludeTerms}).*$`, "i"),
+            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/UK.png"
         },
-        { 
-            name: "FR - 手动选择", 
-            regex: new RegExp(`^(?=.*${includeTerms.FR})(?!.*${excludeTerms}).*$`, "i"), 
-            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/FR.png" 
+        {
+            name: "FR - 手动选择",
+            regex: new RegExp(`^(?=.*${includeTerms.FR})(?!.*${excludeTerms}).*$`, "i"),
+            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/FR.png"
         },
-        { 
-            name: "DE - 手动选择", 
-            regex: new RegExp(`^(?=.*${includeTerms.DE})(?!.*${excludeTerms}).*$`, "i"), 
-            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/DE.png" 
+        {
+            name: "DE - 手动选择",
+            regex: new RegExp(`^(?=.*${includeTerms.DE})(?!.*${excludeTerms}).*$`, "i"),
+            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/DE.png"
         },
-        { 
-            name: "TW - 手动选择", 
-            regex: new RegExp(`^(?=.*${includeTerms.TW})(?!.*${excludeTerms}).*$`, "i"), 
-            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/TW.png" 
+        {
+            name: "TW - 手动选择",
+            regex: new RegExp(`^(?=.*${includeTerms.TW})(?!.*${excludeTerms}).*$`, "i"),
+            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/TW.png"
         }
     ];
 
     const manualProxyGroupsConfig = manualProxyGroups
-        .map ((item) => ({
+        .map((item) => ({
             name: item.name,
             type: "select",
-            proxies: getManualProxiesByRegex (params, item.regex),
+            proxies: getManualProxiesByRegex(params, item.regex),
             icon: item.icon,
             hidden: false,
         }))
-        .filter ((item) => item.proxies.length > 0);
+        .filter((item) => item.proxies.length > 0);
+
+    // 负载均衡策略
+    // 可选值：round-robin / consistent-hashing / sticky-sessions
+    // round-robin：轮询 按顺序循环使用代理列表中的节点
+    // consistent-hashing：散列 根据请求的哈希值将请求分配到固定的节点
+    // sticky-sessions：缓存 对「你的设备IP + 目标地址」组合计算哈希值，根据哈希值将请求分配到固定的节点 缓存 10 分钟过期
+    // 默认值：consistent-hashing
+    const loadBalanceStrategy = "consistent-hashing";
 
     const groups = [
         {
@@ -580,6 +574,7 @@ function overwriteProxyGroups (params) {
             proxies: [
                 "自动选择",
                 "手动选择",
+                "⚖️ 负载均衡",
                 "DIRECT",
             ],
         },
@@ -594,6 +589,15 @@ function overwriteProxyGroups (params) {
             type: "select",
             icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/Urltest.png",
             proxies: ["ALL - 自动选择"],
+        },
+        {
+            name: "⚖️ 负载均衡",
+            type: "load-balance",
+            url: "https://cp.cloudflare.com",
+            interval: 300,
+            strategy: loadBalanceStrategy,
+            proxies: allProxies,
+            icon: "https://raw.githubusercontent.com/Orz-3/mini/master/Color/Available.png"
         },
         {
             name: "ALL - 自动选择",
@@ -644,14 +648,14 @@ function overwriteProxyGroups (params) {
     ];
 
     autoProxyGroups.length &&
-        groups [2].proxies.unshift (...autoProxyGroups.map ((item) => item.name));
-    groups.push (...autoProxyGroups);
-    groups.push (...manualProxyGroupsConfig);
-    params ["proxy-groups"] = groups;
+        groups[2].proxies.unshift(...autoProxyGroups.map((item) => item.name));
+    groups.push(...autoProxyGroups);
+    groups.push(...manualProxyGroupsConfig);
+    params["proxy-groups"] = groups;
 }
 
 // 覆写规则
-function overwriteRules (params) {
+function overwriteRules(params) {
     const adNonipRules = [
         "RULE-SET,reject_non_ip,REJECT",
         "RULE-SET,reject_domainset,REJECT",
@@ -667,7 +671,13 @@ function overwriteRules (params) {
         "DOMAIN,igal.top,DIRECT",
         "DOMAIN,zy.072188.xyz,DIRECT",
         "DOMAIN-KEYWORD,yaasworker,DIRECT",
-      ];
+        "DOMAIN-KEYWORD,ghp.keleyaa.com,DIRECT",
+        "DOMAIN-KEYWORD,wget.la,DIRECT",
+        "DOMAIN-KEYWORD,gh.xx9527.cn,DIRECT",
+        "DOMAIN-KEYWORD,ghproxy.cxkpro.top,DIRECT",
+        "DOMAIN-KEYWORD,gh-proxy.ygxz.in,DIRECT",
+        //"DOMAIN,blacktealab.com,DIRECT",
+    ];
 
     const nonipRules = [
         "RULE-SET,cdn_domainset,🎯 节点选择",
@@ -969,17 +979,17 @@ function overwriteRules (params) {
             proxy: "🎯 节点选择"
         }
     };
-    
-    params ["rule-providers"] = ruleProviders;
-    params ["rules"] = rules;
+
+    params["rule-providers"] = ruleProviders;
+    params["rules"] = rules;
 }
 
-function getProxiesByRegex (params, regex) {
-    const matchedProxies = params.proxies.filter ((e) => regex.test (e.name)).map ((e) => e.name);
+function getProxiesByRegex(params, regex) {
+    const matchedProxies = params.proxies.filter((e) => regex.test(e.name)).map((e) => e.name);
     return matchedProxies.length > 0 ? matchedProxies : ["COMPATIBLE"];
 }
 
-function getManualProxiesByRegex (params, regex) {
-    const matchedProxies = params.proxies.filter ((e) => regex.test (e.name)).map ((e) => e.name);
+function getManualProxiesByRegex(params, regex) {
+    const matchedProxies = params.proxies.filter((e) => regex.test(e.name)).map((e) => e.name);
     return matchedProxies.length > 0 ? matchedProxies : ["COMPATIBLE"];
 }
