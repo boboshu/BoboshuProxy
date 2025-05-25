@@ -4,8 +4,8 @@ function main(params) {
     if (!params.proxies) return params;
     overwriteBasicOptions(params);
     overwriteDns(params);
-    overwriteFakeIpFilter(params);
-    overwriteNameserverPolicy(params);
+    // overwriteFakeIpFilter(params);
+    // overwriteNameserverPolicy(params);
     overwriteHosts(params);
     overwriteTunnel(params);
     overwriteProxyGroups(params);
@@ -72,6 +72,7 @@ function overwriteDns(params) {
         "respect-rules": true,
         nameserver: dnsList,
         "proxy-server-nameserver": proxyDnsList,
+        // fallback: fallbackList,
     };
     params.dns = { ...dnsOptions };
 }
@@ -676,6 +677,9 @@ function overwriteRules(params) {
         "DOMAIN-KEYWORD,gh.xx9527.cn,DIRECT",
         "DOMAIN-KEYWORD,ghproxy.cxkpro.top,DIRECT",
         "DOMAIN-KEYWORD,gh-proxy.ygxz.in,DIRECT",
+        "DOMAIN-KEYWORD,vdownload.hembed.com,DIRECT",
+        // "DOMAIN-KEYWORD,steambroadcast,DIRECT",
+        // "DOMAIN-KEYWORD,steamcontent.com,DIRECT",        
         //"DOMAIN,blacktealab.com,DIRECT",
     ];
 
