@@ -85,28 +85,79 @@ geox-url:
 #       - "https://dns.google/dns-query"
 # hosts:
 
-# DNS模块
+# # DNS模块
+# dns:
+#   enable: true
+#   listen: 0.0.0.0:1053
+#   ipv6: false
+#   respect-rules: true
+#   enhanced-mode: fake-ip
+#   fake-ip-range: 28.0.0.1/8
+#   fake-ip-filter-mode: blacklist
+#   fake-ip-filter:
+#     - "rule-set:private_domain,cn_domain"
+#     - "+.msftconnecttest.com"
+#     - "+.msftncsi.com"
+#     - "time.*.com"
+#   default-nameserver:
+#     - 223.5.5.5
+#   proxy-server-nameserver:
+#     - https://223.5.5.5/dns-query
+#   # namesever尽量用运营商提供的DNS
+#   nameserver:
+#     - 223.5.5.5
+#     - 119.29.29.29
+
 dns:
   enable: true
-  listen: 0.0.0.0:1053
-  ipv6: false
-  respect-rules: true
   enhanced-mode: fake-ip
-  fake-ip-range: 28.0.0.1/8
-  fake-ip-filter-mode: blacklist
-  fake-ip-filter:
-    - "rule-set:private_domain,cn_domain"
-    - "+.msftconnecttest.com"
-    - "+.msftncsi.com"
-    - "time.*.com"
   default-nameserver:
     - 223.5.5.5
-  proxy-server-nameserver:
-    - https://223.5.5.5/dns-query
-  # namesever尽量用运营商提供的DNS
-  nameserver:
-    - 223.5.5.5
     - 119.29.29.29
+    - "[2400:3200::1]"
+    - "[2402:4e00::]"
+  nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+    # - 223.5.5.5
+    # - 119.29.29.29
+  fallback: []
+  fake-ip-filter:
+    - "*"
+    # rule-set 仅支持 behavior 为 domain/classical
+    - "rule-set:clash_fake_ip_filter"
+    - "rule-set:private"
+  use-hosts: true
+  use-system-hosts: true
+
+# ipv6: true
+# dns:
+#   enable: true
+#   ipv6: true
+#   enhanced-mode: fake-ip
+#   fake-ip-range: 198.18.0.1/16
+#   # 配置不使用 fake-ip 的域名，代理跳过解析，让系统自己解析
+#   fake-ip-filter:
+#     - "*" # 只匹配 localhost 等没有. 的主机名
+#     - "*.lan"
+#     - "xbox.*.microsoft.com"
+#     - "+.xboxlive.com"
+#     - "localhost.ptlogin2.qq.com"
+#   nameserver:
+#     # 不要用 IP
+#     - https://dns.alidns.com/dns-query # 阿里
+#     - https://doh.pub/dns-query # 腾讯
+#     # - 8.8.8.8
+#     # - 223.5.5.5
+#     # - 119.29.29.29
+
+#   # proxy-server-nameserver: # 代理服务器的 DNS 解析
+#   #   - https://dns.alidns.com/dns-query # 阿里
+#   #   - https://dns.cloudflare.com/dns-query # Cloudflare
+#   fallback:
+#     - 8.8.8.8
+#   #   - "https://dns.cloudflare.com/dns-query"
+#   #   - "https://dns.google/dns-query"
 
 # 节点筛选组
 # 筛选了香港，日本，韩国，新加坡，美国，英国，法国，德国，台湾，马来西亚，泰国，越南，土耳其，阿根廷
@@ -449,6 +500,16 @@ rule-providers:
     <<: *RuleSet_ipcidr
     url: https://ruleset.skk.moe/Clash/ip/china_ip.txt
     path: ./rule_set/sukkaw_ruleset/china_ip.txt
+
+  clash_fake_ip_filter:
+    <<: *RuleSet_classical
+    url: https://ghproxy.ecorp.one/https://raw.githubusercontent.com/test482/personl-clash-rule/master/clash_fake_ip_filter.yaml
+    path: ./providers/rule/clash_fake_ip_filter.yaml
+
+  private:
+    <<: *RuleSet_domain
+    url: https://ghproxy.ecorp.one/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/private.txt
+    path: ./providers/rule/private.yaml
 
   private_domain: { <<: *RuleSet_domain_mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
   cn_domain: { <<: *RuleSet_domain_mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
