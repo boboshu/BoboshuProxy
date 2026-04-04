@@ -109,6 +109,7 @@ geox-url:
 #     - 119.29.29.29
 
 dns:
+  # ipv6: false
   enable: true
   enhanced-mode: fake-ip
   default-nameserver:
@@ -159,178 +160,223 @@ dns:
 #   #   - "https://dns.cloudflare.com/dns-query"
 #   #   - "https://dns.google/dns-query"
 
-# 节点筛选组
-# 筛选了香港，日本，韩国，新加坡，美国，英国，法国，德国，台湾，马来西亚，泰国，越南，土耳其，阿根廷
-# 你的机场可能不一定全有，也没关系，不会报错
-# FilterSelfHost: &FilterSelfHost "^自建.*" # 个人自建节点
-# 匹配以香港，或 HK，或 Hong 以及 🇭🇰 开头，并且`[网站, 地址, 剩余, ..., 节点]`等词没有出现过
-FilterHK: &FilterHK "^(?=.*(香港|HK|Hong|🇭🇰))^(?!.*(网站|地址|剩余|过期|时间|有效|网址|禁止|邮箱|发布|客服|订阅|节点)).*$"
-FilterJP: &FilterJP "^(?=.*(日本|JP|Japan|🇯🇵))^(?!.*(网站|地址|剩余|过期|时间|有效|网址|禁止|邮箱|发布|客服|订阅|节点)).*$"
-FilterKR: &FilterKR "^(?=.*(韩国|韩|KR|Korea|🇰🇷))^(?!.*(网站|地址|剩余|过期|时间|有效|网址|禁止|邮箱|发布|客服|订阅|节点)).*$"
-FilterSG: &FilterSG "^(?=.*(新加坡|狮城|SG|Singapore|🇸🇬))^(?!.*(网站|地址|剩余|过期|时间|有效|网址|禁止|邮箱|发布|客服|订阅|节点)).*$"
-FilterUS: &FilterUS "^(?=.*(美国|US|United States|America|🇺🇸))^(?!.*(网站|地址|剩余|过期|时间|有效|网址|禁止|邮箱|发布|客服|订阅|节点)).*$"
-FilterUK: &FilterUK "^(?=.*(英国|UK|United Kingdom|🇬🇧))^(?!.*(网站|地址|剩余|过期|时间|有效|网址|禁止|邮箱|发布|客服|订阅|节点)).*$"
-FilterFR: &FilterFR "^(?=.*(法国|FR|France|🇫🇷))^(?!.*(网站|地址|剩余|过期|时间|有效|网址|禁止|邮箱|发布|客服|订阅|节点)).*$"
-FilterDE: &FilterDE "^(?=.*(德国|DE|Germany|🇩🇪))^(?!.*(网站|地址|剩余|过期|时间|有效|网址|禁止|邮箱|发布|客服|订阅|节点)).*$"
-FilterTW: &FilterTW "^(?=.*(台湾|TW|Taiwan|Wan|🇹🇼|🇨🇳))^(?!.*(网站|地址|剩余|过期|时间|有效|网址|禁止|邮箱|发布|客服|订阅|节点)).*$"
-FilterMY: &FilterMY "^(?=.*(马来西亚|MY|Malaysia|🇲🇾))^(?!.*(网站|地址|剩余|过期|时间|有效|网址|禁止|邮箱|发布|客服|订阅|节点)).*$"
-FilterTH: &FilterTH "^(?=.*(泰国|TH|Thailand|🇹🇭))^(?!.*(网站|地址|剩余|过期|时间|有效|网址|禁止|邮箱|发布|客服|订阅|节点)).*$"
-FilterVN: &FilterVN "^(?=.*(越南|VN|Vietnam|🇻🇳))^(?!.*(网站|地址|剩余|过期|时间|有效|网址|禁止|邮箱|发布|客服|订阅|节点)).*$"
-FilterTR: &FilterTR "^(?=.*(土耳其|TR|Turkey|🇹🇷))^(?!.*(网站|地址|剩余|过期|时间|有效|网址|禁止|邮箱|发布|客服|订阅|节点)).*$"
-FilterAR: &FilterAR "^(?=.*(阿根廷|AR|Argentina|🇦🇷))^(?!.*(网站|地址|剩余|过期|时间|有效|网址|禁止|邮箱|发布|客服|订阅|节点)).*$"
-FilterOthers: &FilterOthers "^(?!.*(🇭🇰|HK|Hong|香港|台湾|🇹🇼|TW|Taiwan|Wan|🇯🇵|JP|Japan|日本|🇸🇬|SG|新加坡|Singapore|狮城|🇺🇸|US|United States|America|美国|🇩🇪|DE|Germany|德国|🇬🇧|UK|United Kingdom|英国|🇰🇷|KR|Korea|韩国|韩|🇫🇷|FR|France|法国|马来西亚|MYS|Malaysia|🇲🇾|泰国|TH|Thailand|🇹🇭|越南|VN|Vietnam|🇻🇳|土耳其|TR|Turkey|🇹🇷|阿根廷|AR|Argentina|🇦🇷)).*$"
-FilterAll: &FilterAll '^(?=.*(.))(?!.*((?i)群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|(\b(USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author)\b|(\d{4}-\d{2}-\d{2}|\d+G)))).*$'
+# 节点筛选
+# 按地区筛选
+FilterHK: &FilterHK '(HK|香港|[Hh][Kk]|Hong\s*Kong)'
+FilterTW: &FilterTW "(TW|台[湾灣]|[Tt][Ww]|Taiwan)"
+FilterUS: &FilterUS '(US|美[国國]|America|United\s*States|[Uu][Ss])'
+FilterJP: &FilterJP "(JP|日本|东京|大阪|[Jj][Pp]|Japan)"
+FilterSG: &FilterSG "(SG|新加坡|狮城|[Ss][Gg]|Singapore)"
 
-# 策略组参数锚点
-# 手动选择参数
+### 策略组基础配置
+# 手动选择
 Select:
   &Select {
     type: select,
-    url: "https://cp.cloudflare.com",
+    url: "http://connectivitycheck.platform.hicloud.com/generate_204",
     disable-udp: false,
     hidden: false,
     include-all: true,
   }
-# 自动测速参数
-Auto:
-  &Auto {
+# 自动选择 [每 300 秒一次惰性健康检查，容差 50ms，时延超过 2 秒判定为失败，失败 3 次自动触发健康检查]
+UrlTest:
+  &UrlTest {
     type: url-test,
-    url: "https://cp.cloudflare.com",
+    url: "http://connectivitycheck.platform.hicloud.com/generate_204",
     interval: 300,
+    lazy: true,
     tolerance: 50,
+    timeout: 2000,
     disable-udp: false,
+    max-failed-times: 3,
+    hidden: true,
+    include-all: true,
+  }
+# 自动回退 [每 300 秒一次惰性健康检查，时延超过 2 秒判定为失败，失败 3 次自动触发健康检查]
+FallBack:
+  &FallBack {
+    type: fallback,
+    url: "http://connectivitycheck.platform.hicloud.com/generate_204",
+    interval: 300,
+    lazy: true,
+    timeout: 2000,
+    disable-udp: false,
+    max-failed-times: 3,
+    hidden: true,
+    include-all: true,
+  }
+# 负载均衡 [每 300 秒一次惰性健康检查，时延超过 2 秒判定为失败，失败 3 次则自动触发健康检查]
+LoadBalance:
+  &LoadBalance {
+    type: load-balance,
+    url: "http://connectivitycheck.platform.hicloud.com/generate_204",
+    interval: 300,
+    lazy: true,
+    disable-udp: false,
+    strategy: consistent-hashing,
+    timeout: 2000,
+    max-failed-times: 3,
     hidden: true,
     include-all: true,
   }
 
 # 策略组
 proxy-groups:
-  - name: 节点选择
-    type: select
-    proxies: [自动选择, 手动选择, DIRECT]
-    url: https://cp.cloudflare.com
-    icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Static.png
+  # 主选择组
+  - {
+      name: 节点选择,
+      type: select,
+      proxies: [智能选择, 手动选择, 全部节点, DIRECT],
+      url: http://connectivitycheck.platform.hicloud.com/generate_204,
+      icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Static.png,
+    }
 
-  - name: 自动选择
-    type: select
-    proxies: [🇭🇰 - 自动选择, 🇯🇵 - 自动选择, 🇰🇷 - 自动选择, 🇸🇬 - 自动选择, 🇺🇸 - 自动选择, 🇬🇧 - 自动选择, 🇫🇷 - 自动选择, 🇩🇪 - 自动选择, 🇹🇼 - 自动选择, 🇲🇾 - 自动选择, 🇹🇭 - 自动选择, 🇻🇳 - 自动选择, 🇹🇷 - 自动选择, 🇦🇷 - 自动选择]
-    url: https://cp.cloudflare.com
-    icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Urltest.png
-
-  - name: 手动选择
-    type: select
-    proxies: [🇭🇰 - 手动选择, 🇯🇵 - 手动选择, 🇰🇷 - 手动选择, 🇸🇬 - 手动选择, 🇺🇸 - 手动选择, 🇬🇧 - 手动选择, 🇫🇷 - 手动选择, 🇩🇪 - 手动选择, 🇹🇼 - 手动选择, 🇲🇾 - 手动选择, 🇹🇭 - 手动选择, 🇻🇳 - 手动选择, 🇹🇷 - 手动选择, 🇦🇷 - 手动选择, Others - 手动选择]
-    url: https://cp.cloudflare.com
-    icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Cylink.png
+  # 手动/Auto
+  - {
+      name: 手动选择,
+      type: select,
+      proxies:
+        [HK-手动选择, JP-手动选择, SG-手动选择, US-手动选择, TW-手动选择],
+      url: http://connectivitycheck.platform.hicloud.com/generate_204,
+      icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Cylink.png,
+    }
+  - {
+      name: 智能选择,
+      type: select,
+      proxies: [HK-Auto, JP-Auto, SG-Auto, US-Auto, TW-Auto],
+      url: http://connectivitycheck.platform.hicloud.com/generate_204,
+      icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Urltest.png,
+    }
 
   - name: Telegram
     type: select
-    proxies: [🇭🇰 - 自动选择, 🇯🇵 - 自动选择, 🇰🇷 - 自动选择, 🇸🇬 - 自动选择, 🇺🇸 - 自动选择, 🇬🇧 - 自动选择, 🇫🇷 - 自动选择, 🇩🇪 - 自动选择, 🇹🇼 - 自动选择, 🇲🇾 - 自动选择, 🇹🇭 - 自动选择, 🇻🇳 - 自动选择, 🇹🇷 - 自动选择, 🇦🇷 - 自动选择]
+    proxies: [节点选择, US-Auto, HK-Auto, JP-Auto, SG-Auto, DIRECT]
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Telegram.png
 
   # 关于 CDN 的节点，尽可能选更快以及更便宜的节点（比如低倍的）
   # 当然，有些情况可以直连
   - name: CDN节点
     type: select
-    proxies: [节点选择, DIRECT, 🇭🇰 - 自动选择, 🇯🇵 - 自动选择, 🇰🇷 - 自动选择, 🇸🇬 - 自动选择, 🇺🇸 - 自动选择, 🇬🇧 - 自动选择, 🇫🇷 - 自动选择, 🇩🇪 - 自动选择, 🇹🇼 - 自动选择, 🇲🇾 - 自动选择, 🇹🇭 - 自动选择, 🇻🇳 - 自动选择, 🇹🇷 - 自动选择, 🇦🇷 - 自动选择]
+    proxies: [节点选择, DIRECT, HK-Auto, JP-Auto, SG-Auto, US-Auto]
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Skicat.png
 
   # 关于 CDN 的节点，尽可能选更快以及更便宜的节点（比如低倍的）
   # 当然，有些情况可以直连
   - name: 下载CDN节点
     type: select
-    proxies: [DIRECT, 🇭🇰 - 自动选择, 🇯🇵 - 自动选择, 🇰🇷 - 自动选择, 🇸🇬 - 自动选择, 🇺🇸 - 自动选择, 🇬🇧 - 自动选择, 🇫🇷 - 自动选择, 🇩🇪 - 自动选择, 🇹🇼 - 自动选择, 🇲🇾 - 自动选择, 🇹🇭 - 自动选择, 🇻🇳 - 自动选择, 🇹🇷 - 自动选择, 🇦🇷 - 自动选择]
+    proxies: [DIRECT, 节点选择, HK-Auto, JP-Auto, SG-Auto, US-Auto]
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Thunder.png
 
   # 避免 HK 的一些推荐和骗子
   - name: Twitter
     type: select
-    proxies: [🇯🇵 - 自动选择, 🇭🇰 - 自动选择, 🇹🇼 - 自动选择, 🇰🇷 - 自动选择, 🇸🇬 - 自动选择, 🇺🇸 - 自动选择, 🇬🇧 - 自动选择, 🇫🇷 - 自动选择, 🇩🇪 - 自动选择, 🇲🇾 - 自动选择, 🇹🇭 - 自动选择, 🇻🇳 - 自动选择, 🇹🇷 - 自动选择, 🇦🇷 - 自动选择]
+    proxies: [节点选择, US-Auto, HK-Auto, JP-Auto, SG-Auto, DIRECT]
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Twitter.png
 
   # 我 Spotify 注册的就是日区
   - name: Spotify
     type: select
-    proxies: [🇯🇵 - 自动选择, 🇭🇰 - 自动选择, 🇹🇼 - 自动选择, 🇰🇷 - 自动选择, 🇸🇬 - 自动选择, 🇺🇸 - 自动选择, 🇬🇧 - 自动选择, 🇫🇷 - 自动选择, 🇩🇪 - 自动选择, 🇲🇾 - 自动选择, 🇹🇭 - 自动选择, 🇻🇳 - 自动选择, 🇹🇷 - 自动选择, 🇦🇷 - 自动选择]
+    proxies: [节点选择, US-Auto, HK-Auto, JP-Auto, SG-Auto, DIRECT]
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Spotify.png
 
   - name: YouTube
     type: select
-    proxies: [🇭🇰 - 自动选择, 🇯🇵 - 自动选择, 🇰🇷 - 自动选择, 🇸🇬 - 自动选择, 🇺🇸 - 自动选择, 🇬🇧 - 自动选择, 🇫🇷 - 自动选择, 🇩🇪 - 自动选择, 🇹🇼 - 自动选择, 🇲🇾 - 自动选择, 🇹🇭 - 自动选择, 🇻🇳 - 自动选择, 🇹🇷 - 自动选择, 🇦🇷 - 自动选择]
+    proxies: [HK-Auto, 节点选择, JP-Auto, SG-Auto, US-Auto, DIRECT]
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/YouTube.png
 
   # 默认国区
   - name: Bilibili
     type: select
-    proxies: [DIRECT, 🇹🇼 - 自动选择, 🇭🇰 - 自动选择, 🇯🇵 - 自动选择, 🇰🇷 - 自动选择, 🇸🇬 - 自动选择, 🇺🇸 - 自动选择, 🇬🇧 - 自动选择, 🇫🇷 - 自动选择, 🇩🇪 - 自动选择, 🇲🇾 - 自动选择, 🇹🇭 - 自动选择, 🇻🇳 - 自动选择, 🇹🇷 - 自动选择, 🇦🇷 - 自动选择]
+    proxies: [DIRECT, 节点选择, HK-Auto, JP-Auto, SG-Auto, US-Auto]
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Bili.png
 
   - name: TikTok
     type: select
-    proxies: [🇯🇵 - 自动选择, 🇹🇼 - 自动选择, 🇭🇰 - 自动选择, 🇰🇷 - 自动选择, 🇸🇬 - 自动选择, 🇺🇸 - 自动选择, 🇬🇧 - 自动选择, 🇫🇷 - 自动选择, 🇩🇪 - 自动选择, 🇲🇾 - 自动选择, 🇹🇭 - 自动选择, 🇻🇳 - 自动选择, 🇹🇷 - 自动选择, 🇦🇷 - 自动选择]
+    proxies: [节点选择, US-Auto, HK-Auto, JP-Auto, SG-Auto, DIRECT]
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/TikTok.png
 
   - name: Amazon
     type: select
-    proxies: [🇺🇸 - 自动选择, 🇭🇰 - 自动选择, 🇯🇵 - 自动选择, 🇰🇷 - 自动选择, 🇸🇬 - 自动选择, 🇬🇧 - 自动选择, 🇫🇷 - 自动选择, 🇩🇪 - 自动选择, 🇹🇼 - 自动选择, 🇲🇾 - 自动选择, 🇹🇭 - 自动选择, 🇻🇳 - 自动选择, 🇹🇷 - 自动选择, 🇦🇷 - 自动选择]
+    proxies: [节点选择, US-Auto, HK-Auto, JP-Auto, SG-Auto, DIRECT]
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Amazon.png
 
   # AIGC 屏蔽港澳台
   - name: AIGC
     type: select
-    proxies: [🇺🇸 - 自动选择, 🇯🇵 - 自动选择, 🇰🇷 - 自动选择, 🇸🇬 - 自动选择, 🇭🇰 - 自动选择, 🇬🇧 - 自动选择, 🇫🇷 - 自动选择, 🇩🇪 - 自动选择, 🇹🇼 - 自动选择, 🇲🇾 - 自动选择, 🇹🇭 - 自动选择, 🇻🇳 - 自动选择, 🇹🇷 - 自动选择, 🇦🇷 - 自动选择]
+    proxies: [节点选择, US-Auto, HK-Auto, JP-Auto, SG-Auto, DIRECT]
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/OpenAI.png
 
   - name: 苹果服务
     type: select
-    proxies: [DIRECT, 🇺🇸 - 自动选择, 🇭🇰 - 自动选择, 🇯🇵 - 自动选择, 🇰🇷 - 自动选择, 🇸🇬 - 自动选择, 🇬🇧 - 自动选择, 🇫🇷 - 自动选择, 🇩🇪 - 自动选择, 🇹🇼 - 自动选择, 🇲🇾 - 自动选择, 🇹🇭 - 自动选择, 🇻🇳 - 自动选择, 🇹🇷 - 自动选择, 🇦🇷 - 自动选择]
+    proxies: [DIRECT, 节点选择, HK-Auto, JP-Auto, SG-Auto, US-Auto]
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Apple.png
 
   - name: 微软服务
     type: select
-    proxies: [DIRECT, 🇺🇸 - 自动选择, 🇭🇰 - 自动选择, 🇯🇵 - 自动选择, 🇰🇷 - 自动选择, 🇸🇬 - 自动选择, 🇬🇧 - 自动选择, 🇫🇷 - 自动选择, 🇩🇪 - 自动选择, 🇹🇼 - 自动选择, 🇲🇾 - 自动选择, 🇹🇭 - 自动选择, 🇻🇳 - 自动选择, 🇹🇷 - 自动选择, 🇦🇷 - 自动选择]
+    proxies: [DIRECT, 节点选择, HK-Auto, JP-Auto, SG-Auto, US-Auto]
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Microsoft.png
 
   - name: 漏网之鱼
     type: select
-    proxies: [DIRECT, 节点选择, 🇺🇸 - 自动选择, 🇭🇰 - 自动选择, 🇯🇵 - 自动选择, 🇰🇷 - 自动选择, 🇸🇬 - 自动选择, 🇬🇧 - 自动选择, 🇫🇷 - 自动选择, 🇩🇪 - 自动选择, 🇹🇼 - 自动选择, 🇲🇾 - 自动选择, 🇹🇭 - 自动选择, 🇻🇳 - 自动选择, 🇹🇷 - 自动选择, 🇦🇷 - 自动选择]
+    proxies: [DIRECT, 节点选择, HK-Auto, JP-Auto, SG-Auto, US-Auto]
     icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Final.png
 
-  # 自动选择
-  # - { name: 🛠️ - 自动选择, <<: *Auto, filter: *FilterSelfHost }
-  - { name: 🇭🇰 - 自动选择, <<: *Auto, filter: *FilterHK }
-  - { name: 🇯🇵 - 自动选择, <<: *Auto, filter: *FilterJP }
-  - { name: 🇰🇷 - 自动选择, <<: *Auto, filter: *FilterKR }
-  - { name: 🇸🇬 - 自动选择, <<: *Auto, filter: *FilterSG }
-  - { name: 🇺🇸 - 自动选择, <<: *Auto, filter: *FilterUS }
-  - { name: 🇬🇧 - 自动选择, <<: *Auto, filter: *FilterUK }
-  - { name: 🇫🇷 - 自动选择, <<: *Auto, filter: *FilterFR }
-  - { name: 🇩🇪 - 自动选择, <<: *Auto, filter: *FilterDE }
-  - { name: 🇹🇼 - 自动选择, <<: *Auto, filter: *FilterTW }
-  - { name: 🇲🇾 - 自动选择, <<: *Auto, filter: *FilterMY }
-  - { name: 🇹🇭 - 自动选择, <<: *Auto, filter: *FilterTH }
-  - { name: 🇻🇳 - 自动选择, <<: *Auto, filter: *FilterVN }
-  - { name: 🇹🇷 - 自动选择, <<: *Auto, filter: *FilterTR }
-  - { name: 🇦🇷 - 自动选择, <<: *Auto, filter: *FilterAR }
+  # Auto
+  - {
+      name: HK-Auto,
+      type: select,
+      proxies: [HK-自动选择, HK-自动回退, HK-负载均衡],
+    }
+  - {
+      name: JP-Auto,
+      type: select,
+      proxies: [JP-自动选择, JP-自动回退, JP-负载均衡],
+    }
+  - {
+      name: SG-Auto,
+      type: select,
+      proxies: [SG-自动选择, SG-自动回退, SG-负载均衡],
+    }
+  - {
+      name: US-Auto,
+      type: select,
+      proxies: [US-自动选择, US-自动回退, US-负载均衡],
+    }
+  - {
+      name: TW-Auto,
+      type: select,
+      proxies: [TW-自动选择, TW-自动回退, TW-负载均衡],
+    }
 
-  # 手动选择
-  # - { name: 🛠️ - 手动选择, <<: *Select, filter: *FilterSelfHost, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/Personal.png}
-  - { name: 🇭🇰 - 手动选择, <<: *Select, filter: *FilterHK, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/HK.png}
-  - { name: 🇯🇵 - 手动选择, <<: *Select, filter: *FilterJP, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/JP.png}
-  - { name: 🇰🇷 - 手动选择, <<: *Select, filter: *FilterKR, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/KR.png}
-  - { name: 🇸🇬 - 手动选择, <<: *Select, filter: *FilterSG, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/SG.png}
-  - { name: 🇺🇸 - 手动选择, <<: *Select, filter: *FilterUS, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/US.png}
-  - { name: 🇬🇧 - 手动选择, <<: *Select, filter: *FilterUK, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/UK.png}
-  - { name: 🇫🇷 - 手动选择, <<: *Select, filter: *FilterFR, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/FR.png}
-  - { name: 🇩🇪 - 手动选择, <<: *Select, filter: *FilterDE, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/DE.png}
-  - { name: 🇹🇼 - 手动选择, <<: *Select, filter: *FilterTW, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/TW.png}
-  - { name: 🇲🇾 - 手动选择, <<: *Select, filter: *FilterMY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Malaysia.png}
-  - { name: 🇹🇭 - 手动选择, <<: *Select, filter: *FilterTH, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/TH.png}
-  - { name: 🇻🇳 - 手动选择, <<: *Select, filter: *FilterVN, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/VN.png}
-  - { name: 🇹🇷 - 手动选择, <<: *Select, filter: *FilterTR, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/TR.png}
-  - { name: 🇦🇷 - 手动选择, <<: *Select, filter: *FilterAR, icon: https://raw.githubusercontent.com/sherlcok314159/Files_/refs/heads/main/Argentina.png}
-  - { name: Others - 手动选择, <<: *Select, filter: *FilterOthers, icon: https://raw.githubusercontent.com/Orz-3/mini/master/Color/XD.png}
+  # 自动选择 - 按地区
+  - { name: HK-自动选择, <<: *UrlTest, filter: *FilterHK }
+  - { name: JP-自动选择, <<: *UrlTest, filter: *FilterJP }
+  - { name: SG-自动选择, <<: *UrlTest, filter: *FilterSG }
+  - { name: US-自动选择, <<: *UrlTest, filter: *FilterUS }
+  - { name: TW-自动选择, <<: *UrlTest, filter: *FilterTW }
 
+  # 自动回退 - 按地区
+  - { name: HK-自动回退, <<: *FallBack, filter: *FilterHK }
+  - { name: JP-自动回退, <<: *FallBack, filter: *FilterJP }
+  - { name: SG-自动回退, <<: *FallBack, filter: *FilterSG }
+  - { name: US-自动回退, <<: *FallBack, filter: *FilterUS }
+  - { name: TW-自动回退, <<: *FallBack, filter: *FilterTW }
+
+  # 负载均衡 - 按地区
+  - { name: HK-负载均衡, <<: *LoadBalance, filter: *FilterHK }
+  - { name: JP-负载均衡, <<: *LoadBalance, filter: *FilterJP }
+  - { name: SG-负载均衡, <<: *LoadBalance, filter: *FilterSG }
+  - { name: US-负载均衡, <<: *LoadBalance, filter: *FilterUS }
+  - { name: TW-负载均衡, <<: *LoadBalance, filter: *FilterTW }
+
+  # 手动选择 - 按地区
+  - { name: HK-手动选择, <<: *Select, filter: *FilterHK }
+  - { name: JP-手动选择, <<: *Select, filter: *FilterJP }
+  - { name: SG-手动选择, <<: *Select, filter: *FilterSG }
+  - { name: US-手动选择, <<: *Select, filter: *FilterUS }
+  - { name: TW-手动选择, <<: *Select, filter: *FilterTW }
+
+  - { name: 全部节点, <<: *Select }
 
 # 规则参数 [每12小时更新一次订阅规则，更新规则时使用（节点选择）策略]
 RuleSet_classical:
@@ -357,7 +403,6 @@ RuleSet_ipcidr:
     format: text,
     proxy: 节点选择,
   }
-
 RuleSet_domain_mrs:
   &RuleSet_domain_mrs {
     type: http,
@@ -369,35 +414,35 @@ RuleSet_domain_mrs:
 
 # 订阅规则
 rule-providers:
-  reject_non_ip_no_drop:
-    <<: *RuleSet_classical
-    url: https://ruleset.skk.moe/Clash/non_ip/reject-no-drop.txt
-    path: ./rule_set/sukkaw_ruleset/reject_non_ip_no_drop.txt
+  # reject_non_ip_no_drop:
+  #   <<: *RuleSet_classical
+  #   url: https://ruleset.skk.moe/Clash/non_ip/reject-no-drop.txt
+  #   path: ./rule_set/sukkaw_ruleset/reject_non_ip_no_drop.txt
 
-  reject_non_ip_drop:
-    <<: *RuleSet_classical
-    url: https://ruleset.skk.moe/Clash/non_ip/reject-drop.txt
-    path: ./rule_set/sukkaw_ruleset/reject_non_ip_drop.txt
+  # reject_non_ip_drop:
+  #   <<: *RuleSet_classical
+  #   url: https://ruleset.skk.moe/Clash/non_ip/reject-drop.txt
+  #   path: ./rule_set/sukkaw_ruleset/reject_non_ip_drop.txt
 
-  reject_non_ip:
-    <<: *RuleSet_classical
-    url: https://ruleset.skk.moe/Clash/non_ip/reject.txt
-    path: ./rule_set/sukkaw_ruleset/reject_non_ip.txt
+  # reject_non_ip:
+  #   <<: *RuleSet_classical
+  #   url: https://ruleset.skk.moe/Clash/non_ip/reject.txt
+  #   path: ./rule_set/sukkaw_ruleset/reject_non_ip.txt
 
-  reject_domainset:
-    <<: *RuleSet_domain
-    url: https://ruleset.skk.moe/Clash/domainset/reject.txt
-    path: ./rule_set/sukkaw_ruleset/reject_domainset.txt
+  # reject_domainset:
+  #   <<: *RuleSet_domain
+  #   url: https://ruleset.skk.moe/Clash/domainset/reject.txt
+  #   path: ./rule_set/sukkaw_ruleset/reject_domainset.txt
 
-  reject_extra_domainset:
-    <<: *RuleSet_domain
-    url: https://ruleset.skk.moe/Clash/domainset/reject_extra.txt
-    path: ./sukkaw_ruleset/reject_domainset_extra.txt
+  # reject_extra_domainset:
+  #   <<: *RuleSet_domain
+  #   url: https://ruleset.skk.moe/Clash/domainset/reject_extra.txt
+  #   path: ./sukkaw_ruleset/reject_domainset_extra.txt
 
-  reject_ip:
-    <<: *RuleSet_classical
-    url: https://ruleset.skk.moe/Clash/ip/reject.txt
-    path: ./rule_set/sukkaw_ruleset/reject_ip.txt
+  # reject_ip:
+  #   <<: *RuleSet_classical
+  #   url: https://ruleset.skk.moe/Clash/ip/reject.txt
+  #   path: ./rule_set/sukkaw_ruleset/reject_ip.txt
 
   cdn_domainset:
     <<: *RuleSet_domain
@@ -511,25 +556,33 @@ rule-providers:
     url: https://ghproxy.ecorp.one/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/private.txt
     path: ./providers/rule/private.yaml
 
-  private_domain: { <<: *RuleSet_domain_mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
-  cn_domain: { <<: *RuleSet_domain_mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
+  private_domain:
+    {
+      <<: *RuleSet_domain_mrs,
+      url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs",
+    }
+  cn_domain:
+    {
+      <<: *RuleSet_domain_mrs,
+      url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs",
+    }
 
 # 分流规则
 rules:
   # 非 IP 类规则必须与 IP 类规则分开，避免不必要的 DNS 解析
   # 先是拒绝类，优先级最高，引自 Sukka，包含 uBlock Origin、AdGuard、EasyList 等
-  - RULE-SET,reject_non_ip,REJECT
-  - RULE-SET,reject_domainset,REJECT
-  - RULE-SET,reject_extra_domainset,REJECT # 可能开启后对性能有影响
-  - RULE-SET,reject_non_ip_drop,REJECT-DROP
-  - RULE-SET,reject_non_ip_no_drop,REJECT
+  # - RULE-SET,reject_non_ip,REJECT
+  # - RULE-SET,reject_domainset,REJECT
+  # - RULE-SET,reject_extra_domainset,REJECT # 可能开启后对性能有影响
+  # - RULE-SET,reject_non_ip_drop,REJECT-DROP
+  # - RULE-SET,reject_non_ip_no_drop,REJECT
 
   - RULE-SET,private_domain,DIRECT
   - RULE-SET,cn_domain,DIRECT
 
   # 在此添加自定义规则，优先级次于ad
   - "DOMAIN,mihoyo.ink,DIRECT"
-  - "DOMAIN-KEYWORD,vdownload.hembed.com,DIRECT" # Hanime
+  # - "DOMAIN-KEYWORD,vdownload.hembed.com,DIRECT" # Hanime
 
   # 引自 crazy-max 的规则，WIN-SPY 和 WIN-EXTRA 是 Windows 的附加的隐私跟踪域名
   # WIN-UPDATE 是 Windows 的自动更新域名
@@ -595,7 +648,7 @@ rules:
   - GEOSITE,CN,DIRECT
 
   # IP 类规则
-  - RULE-SET,reject_ip,REJECT
+  # - RULE-SET,reject_ip,REJECT
   - GEOIP,TWITTER,Twitter
   - RULE-SET,telegram_ip,Telegram
   - RULE-SET,stream_ip,节点选择
@@ -608,4 +661,3 @@ rules:
   # 兜底规则
   - MATCH,漏网之鱼
   # - MATCH,节点选择
-
