@@ -582,6 +582,8 @@ rules:
 
   # 在此添加自定义规则，优先级次于ad
   - "DOMAIN,mihoyo.ink,DIRECT"
+  - "DOMAIN,kpkuang.org,节点选择"
+  - "DOMAIN-KEYWORD,pkmp4.com,节点选择"
   # - "DOMAIN-KEYWORD,vdownload.hembed.com,DIRECT" # Hanime
 
   # 引自 crazy-max 的规则，WIN-SPY 和 WIN-EXTRA 是 Windows 的附加的隐私跟踪域名
