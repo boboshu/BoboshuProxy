@@ -581,8 +581,8 @@ rules:
   - RULE-SET,cn_domain,DIRECT
 
   # 在此添加自定义规则，优先级次于ad
-  - "DOMAIN,mihoyo.ink,DIRECT"
-  - "DOMAIN,kpkuang.org,节点选择"
+  # - "DOMAIN-KEYWORD,mihoyo.ink,DIRECT"
+  - "DOMAIN-KEYWORD,kpkuang.org,节点选择"
   - "DOMAIN-KEYWORD,pkmp4.com,节点选择"
   # - "DOMAIN-KEYWORD,vdownload.hembed.com,DIRECT" # Hanime
 
